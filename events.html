@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Events</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="icon" href="images/gdg_logo.png"type="image/x-icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0B0D17 0%, #1E2A38 100%);
+            color: #FFFFFF;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 20px 50px;
+            background: rgba(11, 13, 23, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 45px;
+            height: 45px;
+            overflow: hidden;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #4285f4, #ea4335, #fbbc05, #34a853);
+            padding: 2px;
+        }
+
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            filter: blur(5px);
+            opacity: 0.7;
+            animation: glowPulse 2s infinite;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            background: #0B0D17;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4285f4, #ea4335);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .menu-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #4285f4, #ea4335);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .event-container {
+            padding-top: 120px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .event-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .event-title h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(45deg, #4285f4, #ea4335);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            animation: slideDown 0.6s ease;
+        }
+
+        .event-subtitle {
+            font-size: 20px;
+            color: #A0A0A0;
+            animation: fadeIn 0.6s ease 0.3s both;
+        }
+
+        .event-content {
+            display: flex;
+            gap: 50px;
+            margin: 50px 20px;
+            animation: fadeIn 0.6s ease 0.6s both;
+        }
+
+        .event-info {
+            flex: 1;
+            padding: 30px;
+            background: rgba(66, 133, 244, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-info h2 {
+            font-size: 28px;
+            color: #4285f4;
+            margin-bottom: 20px;
+        }
+
+        .event-details {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .detail-item i {
+            color: #4285f4;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .slider-section {
+            flex: 1.2;
+            position: relative;
+        }
+
+        .slider-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .slider-dot.active {
+            background: #4285f4;
+            transform: scale(1.2);
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            margin-top: 50px;
+            background: rgba(66, 133, 244, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+        }
+
+        .footer-item {
+            text-align: center;
+            cursor: pointer;
+            padding: 15px 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .footer-item:hover {
+            background: rgba(66, 133, 244, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .footer-item.active {
+            background: linear-gradient(45deg, #4285f4, #ea4335);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .event-content {
+                flex-direction: column;
+            }
+
+            .event-title h1 {
+                font-size: 36px;
+            }
+
+            .event-subtitle {
+                font-size: 16px;
+            }
+
+            .event-footer {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+        }
+        a{
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <div class="logo-container">
+                    <img src="images/gdg_logo.png" alt="CIT NC logo">
+                </div>
+                <span class="logo-text">CIT NC</span>
+            </div>
+            <button class="menu-btn">
+            <a href="index.html"><i class="fa fa-chevron-right"></i> Go Back </a>
+            </button>
+        </div>
+    </nav>
+
+    <div class="event-container">
+        <div class="event-title">
+            <h1>Code to Decode</h1>
+            <p class="event-subtitle">Unravel. Decode. Conquer.</p>
+        </div>
+
+        <div class="event-content">
+            <div class="event-info">
+                <h2>Event Details</h2>
+                <div class="event-details">
+                    <div class="detail-item">
+                        <i class="far fa-calendar-alt"></i>
+                        <div>
+                            <strong>Date:</strong> October 20-21, 2024
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="far fa-clock"></i>
+                        <div>
+                            <strong>Time:</strong> 48 Hours
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong>Team Size:</strong> 2-4 Members
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-trophy"></i>
+                        <div>
+                            <strong>Prizes:</strong> Worth ₹50,000
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Mode:</strong> Online
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider-section">
+                <div class="slider-container">
+                    <img src="images/event3.jpg" alt="Event Image" class="slider">
+                    <div class="slider-nav">
+                        <div class="slider-dot active"></div>
+                        <div class="slider-dot"></div>
+                        <div class="slider-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-footer">
+            <div class="footer-item" data-event="Intro Techies">Intro Techies</div>
+            <div class="footer-item" data-event="AI Study Jam">AI Study Jam</div>
+            <div class="footer-item" data-event="Hackathons">Hackathons</div>
+            <div class="footer-item active" data-event="Code to Decode">Code to Decode</div>
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            "images/event1.jpg",
+            "images/gdg_into_session.png",
+            "images/event2.jpg"
+        ];
+
+        let currentIndex = 0;
+        const slider = document.querySelector('.slider');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function preloadImages() {
+            images.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        }
+
+        function updateDots() {
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+
+        function setImage(index) {
+            currentIndex = index;
+            slider.style.opacity = '0';
+            
+            setTimeout(() => {
+                slider.src = images[currentIndex];
+                slider.style.opacity = '1';
+                updateDots();
+            }, 300);
+        }
+
+        // Add click events to dots
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                setImage(index);
+            });
+        });
+
+        // Auto-advance slider
+        function autoAdvance() {
+            currentIndex = (currentIndex + 1) % images.length;
+            setImage(currentIndex);
+        }
+
+        // Initialize slider interval
+        let slideInterval = setInterval(autoAdvance, 2000);
+
+        // Pause auto-advance on hover
+        slider.addEventListener('mouseenter', () => {
+            clearInterval(slideInterval);
+        });
+
+        // Resume auto-advance when mouse leaves
+        slider.addEventListener('mouseleave', () => {
+            slideInterval = setInterval(autoAdvance, 2000);
+        });
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(11, 13, 23, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(11, 13, 23, 0.8)';
+            }
+        });
+
+        // Add hover effects to footer items
+        const footerItems = document.querySelectorAll('.footer-item');
+        footerItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if (!item.classList.contains('active')) {
+                    item.style.transform = 'translateY(-2px)';
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                if (!item.classList.contains('active')) {
+                    item.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Dynamic event change
+        const eventDetails = {
+            "Intro Techies": {
+                title: "Intro Techies",
+                subtitle: "Empowering Women in Tech",
+                date: "November 10-11, 2024",
+                time: "24 Hours",
+                teamSize: "1-3 Members",
+                prizes: "Worth ₹30,000",
+                mode: "Online"
+            },
+            "AI Study Jam": {
+                title: "AI Study Jam",
+                subtitle: "Code. Create. Collaborate.",
+                date: "December 5-6, 2024",
+                time: "36 Hours",
+                teamSize: "2-5 Members",
+                prizes: "Worth ₹40,000",
+                mode: "Hybrid"
+            },
+            "Hackathons": {
+                title: "Hackathons",
+                subtitle: "Hack. Innovate. Win.",
+                date: "January 15-16, 2025",
+                time: "48 Hours",
+                teamSize: "3-6 Members",
+                prizes: "Worth ₹60,000",
+                mode: "Offline"
+            },
+            "Code to Decode": {
+                title: "Code to Decode",
+                subtitle: "Unravel. Decode. Conquer.",
+                date: "October 20-21, 2024",
+                time: "48 Hours",
+                teamSize: "2-4 Members",
+                prizes: "Worth ₹50,000",
+                mode: "Online"
+            }
+        };
+
+        function updateEventDetails(event) {
+            const eventInfo = eventDetails[event];
+            document.querySelector('.event-title h1').textContent = eventInfo.title;
+            document.querySelector('.event-subtitle').textContent = eventInfo.subtitle;
+            const details = document.querySelectorAll('.detail-item div');
+            details[0].innerHTML = `<strong>Date:</strong> ${eventInfo.date}`;
+            details[1].innerHTML = `<strong>Time:</strong> ${eventInfo.time}`;
+            details[2].innerHTML = `<strong>Team Size:</strong> ${eventInfo.teamSize}`;
+            details[3].innerHTML = `<strong>Prizes:</strong> ${eventInfo.prizes}`;
+            details[4].innerHTML = `<strong>Mode:</strong> ${eventInfo.mode}`;
+        }
+
+        footerItems.forEach(item => {
+            item.addEventListener('click', () => {
+                footerItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                updateEventDetails(item.dataset.event);
+            });
+        });
+
+        // Preload images
+        preloadImages();
+    </script>
+</body>
+</html>
